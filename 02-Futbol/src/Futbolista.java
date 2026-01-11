@@ -11,37 +11,59 @@ public class Futbolista extends Thread{
     private int ngols;
     private int ntirades;
 
-    // Constructors
+    // Constructor
     public Futbolista(String nomFutbolista){
         super(nomFutbolista);
         this.ngols = 0;
         this.ntirades = 0;
     }
 
-    // Mètode run
+    // Mètode encarregat de sumar el gol si en nombre a l'atzar està dins de la probabilitat
     @Override
     public void run(){
         for(int i = 0; i < NUM_TIRADES; i++){
-            
-
+            ntirades++;
+            if(Math.random() <= PROBABILITAT){
+                ngols++;
+            }
         }
-    
-    
     }
 
-    // Mètode main
     public static void main(String[] args) {
-        // crear fil
+        // crear els fils
         Futbolista pique = new Futbolista("Piqué");
+        Futbolista vinicius = new Futbolista("Vinicius");
+        Futbolista torres = new Futbolista("Torres");
+        Futbolista ramos = new Futbolista("Ramos");
+        Futbolista ronaldo = new Futbolista("Ronaldo");
+        Futbolista lewan = new Futbolista("Lewan");
+        Futbolista belli = new Futbolista("Belli");
+        Futbolista arnau = new Futbolista("Arnau");
+        Futbolista aspas = new Futbolista("Aspas");
+        Futbolista messi = new Futbolista("Messi");
+        Futbolista mbape = new Futbolista("MBapé");
 
-        // iniciar fil
-        pique.start();
-        // esperar a que acabi
-        // mostrar les estadístiques dels xuts
-
-        System.out.printf("Inici dels xuts --------------\n Fi dels xuts -----------------\n --------Estadístiques--------\n");
+        Futbolista[] jugadors = {pique, vinicius, torres, ramos, ronaldo, lewan, belli, arnau, aspas, messi, mbape};
         
+        // iniciar els fils
+        for (Futbolista futbolista : jugadors) {
+                futbolista.start();
+        }
 
+        // esperar a que acabin
+        try{
+            for (Futbolista futbolista : jugadors) {
+                futbolista.join();
+            }
+        } catch (InterruptedException e) {  // join() només pot llençar aquesta excepció
+            System.out.println("Error ocorregut; un fil ha estat interromput mentre s'esperaba que finalitzés: " + e);
+        }
+
+    
+        System.out.printf("Inici dels xuts --------------\nFi dels xuts -----------------\n--------Estadístiques--------\n");
+        for (Futbolista futbolista : jugadors) {
+            System.out.printf("%-10s -> %2d gols\n", futbolista.getName(), futbolista.ngols);
+        }
     }
 }
 
